@@ -1,72 +1,76 @@
 <div class="container">
-    <h2>Job Applications</h2>
-  
-    <!-- Form for adding a new application -->
-    <div class="card">
-      <h3>Add New Application</h3>
-      <form (ngSubmit)="addApplication()" class="form-grid">
-        <label>
-          Company Name:
-          <input [(ngModel)]="newApplication.companyName" name="companyName" required />
-        </label>
-  
-        <label>
-          Position:
-          <input [(ngModel)]="newApplication.position" name="position" required />
-        </label>
-  
-        <label>
-          Date Applied:
-          <input type="date" [(ngModel)]="newApplication.dateApplied" name="dateApplied" required />
-        </label>
-  
-        <button type="submit" class="btn-primary">Add Application</button>
-      </form>
-    </div>
-  
-    <!-- Table to display the list of applications -->
-    <div class="card">
-      <h3>Application List</h3>
-      <table class="styled-table">
-        <thead>
-          <tr>
-            <th>Company Name</th>
-            <th>Position</th>
-            <th>Status</th>
-            <th>Date Applied</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let application of applications">
-            <td>{{ application.companyName }}</td>
-            <td>{{ application.position }}</td>
-            <td>
-              <select [(ngModel)]="application.status" (change)="updateStatus(application, application.status)">
-                <option value="Applied">Applied</option>
-                <option value="Interview">Interview</option>
-                <option value="Offer">Offer</option>
-                <option value="Rejected">Rejected</option>
-              </select>
-            </td>
-            <td>{{ application.dateApplied | date: 'yyyy-MM-dd' }}</td>
-            <td><button (click)="updateStatus(application, 'Offer')" class="btn btn-offer">Set Offer</button></td>
-          </tr>
-        </tbody>
-      </table>
-  
-      <div class="pagination-controls">
-        <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1" class="btn">Previous</button>
-  
-        <button *ngFor="let page of [].constructor(totalPages); let i = index"
-                (click)="goToPage(i + 1)"
-                [class.active]="currentPage === (i + 1)"
-                class="btn">
-          {{ i + 1 }}
-        </button>
-  
-        <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages" class="btn">Next</button>
-      </div>
+  <h2>Job Applications</h2>
+
+  <div class="card">
+    <h3>{{ editing ? 'Edit Application' : 'Add New Application' }}</h3>
+    <form (ngSubmit)="addOrUpdateApplication()" class="form-grid">
+      <label>
+        Company Name:
+        <input [(ngModel)]="newApplication.companyName" name="companyName" required />
+      </label>
+
+      <label>
+        Position:
+        <input [(ngModel)]="newApplication.position" name="position" required />
+      </label>
+
+      <label>
+        Date Applied:
+        <input type="date" [(ngModel)]="newApplication.dateApplied" name="dateApplied" required />
+      </label>
+
+      <button type="submit" class="btn-primary">
+        {{ editing ? 'Update Application' : 'Add Application' }}
+      </button>
+
+      <button type="button" class="btn-secondary" *ngIf="editing" (click)="resetForm()">Cancel</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>Application List</h3>
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>Company Name</th>
+          <th>Position</th>
+          <th>Status</th>
+          <th>Date Applied</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let application of applications">
+          <td>{{ application.companyName }}</td>
+          <td>{{ application.position }}</td>
+          <td>
+            <select [(ngModel)]="application.status" (change)="updateStatus(application, application.status)">
+              <option value="Applied">Applied</option>
+              <option value="Interview">Interview</option>
+              <option value="Offer">Offer</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </td>
+          <td>{{ application.dateApplied | date: 'yyyy-MM-dd' }}</td>
+          <td>
+            <button (click)="editApplication(application)">Edit</button>
+            <button (click)="deleteApplication(application.id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="pagination-controls">
+      <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1" class="btn">Previous</button>
+
+      <button *ngFor="let page of [].constructor(totalPages); let i = index"
+              (click)="goToPage(i + 1)"
+              [class.active]="currentPage === (i + 1)"
+              class="btn">
+        {{ i + 1 }}
+      </button>
+
+      <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages" class="btn">Next</button>
     </div>
   </div>
-  
+</div>

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-// Define a job application interface for type safety
 export interface JobApplication {
   id: number;
   companyName: string;
@@ -15,7 +14,7 @@ export interface JobApplication {
   providedIn: 'root'
 })
 export class JobApplicationService {
-  private apiUrl = 'httpS://localhost:44369/api/JobApplications'; // Update with your API URL
+  private apiUrl = 'httpS://localhost:44369/api/JobApplications'; // API URL
 
   constructor(private http: HttpClient) {}
 
@@ -33,5 +32,11 @@ export class JobApplicationService {
   updateApplication(id: number, application: JobApplication): Observable<JobApplication> {
     return this.http.put<JobApplication>(`${this.apiUrl}/${id}`, application);
   }
+
+  // delete an application
+  deleteApplication(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+  
   
 }
